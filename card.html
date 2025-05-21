@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript Visualized: An Interactive Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Hero/Intro: Goal: Inform. Viz: Large Text + Icons (HTML/CSS, Unicode: TS, ✅, 💡). Justification: Strong visual intro.
+        - Data Types: Goal: Inform. Viz: Styled List with Unicode icons (HTML/CSS). Justification: Clear, concise representation.
+        - var/let/const: Goal: Compare. Viz: HTML Table. Justification: Direct comparison.
+        - Interfaces Concept: Goal: Organize/Inform. Viz: HTML/CSS "Contract" visual. Justification: Visual metaphor for understanding.
+        - Generics Concept: Goal: Inform. Viz: HTML/CSS "Reusable Box" visual. Justification: Simple visual metaphor.
+        - tsconfig Key Options: Goal: Inform. Viz: Styled List. Justification: Easy to scan.
+        - Modules Concept: Goal: Organize. Viz: HTML/CSS diagram. Justification: Visual flow of import/export.
+        - Illustrative Chart (TS Feature Areas): Goal: Inform (and fulfill Chart.js req). Viz: Bar Chart (Chart.js/Canvas). Justification: Conceptual grouping of features.
+        - All text content directly summarized from the provided TypeScript document.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7FFF7;
+            /* Neutral Light */
+            color: #1A535C;
+            /* Neutral Dark */
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        .hero-bg {
+            background-color: #4ECDC4;
+            /* Turquoise */
+            color: #F7FFF7;
+        }
+
+        .accent-text {
+            color: #FF6B6B;
+            /* Coral Red */
+        }
+
+        .highlight-bg {
+            background-color: #FFE66D;
+            /* Pale Yellow */
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            /* 12px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            /* 24px */
+            margin-bottom: 1.5rem;
+            /* 24px */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #1A535C;
+            border-bottom: 3px solid #FF6B6B;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            color: #4ECDC4;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .icon-placeholder {
+            font-size: 1.5rem;
+            /* 24px */
+            margin-right: 0.5rem;
+            /* 8px */
+            color: #FF6B6B;
+        }
+
+        .code-like {
+            background-color: #1A535C;
+            color: #F7FFF7;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            /* 6px */
+            font-family: monospace;
+            display: inline-block;
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            /* max-w-2xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            /* Base height */
+            max-height: 350px;
+        }
+
+        @media (min-width: 768px) {
+
+            /* md */
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .html-diagram {
+            border: 2px dashed #4ECDC4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #F7FFF7;
+            text-align: center;
+        }
+
+        .html-diagram-box {
+            background-color: #FFE66D;
+            color: #1A535C;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin: 0.5rem;
+            display: inline-block;
+            border: 1px solid #1A535C;
+        }
+
+        .html-diagram-arrow {
+            font-size: 1.5rem;
+            color: #FF6B6B;
+            margin: 0 0.5rem;
+        }
+
+        .section-nav {
+            position: sticky;
+            top: 0;
+            background-color: rgba(247, 255, 247, 0.9);
+            /* Light with opacity */
+            z-index: 50;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-link {
+            color: #1A535C;
+            transition: color 0.3s ease;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #FF6B6B;
+            background-color: #FFE66D;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <nav id="navbar" class="section-nav hidden md:block">
+        <div class="container mx-auto px-4">
+            <ul class="flex justify-center space-x-4 text-sm font-medium">
+                <li><a href="#hero" class="nav-link">Intro</a></li>
+                <li><a href="#building-blocks" class="nav-link">Blocks</a></li>
+                <li><a href="#structuring-code" class="nav-link">Structure</a></li>
+                <li><a href="#advanced-power" class="nav-link">Advanced</a></li>
+                <li><a href="#in-practice" class="nav-link">Practice</a></li>
+                <li><a href="#best-practices" class="nav-link">Best Practices</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header id="hero" class="hero-bg py-12 md:py-20 text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4">
+                <span class="icon-placeholder">🔷</span>TypeScript Visualized
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                A superset of JavaScript that adds static typing for more robust and maintainable code.
+            </p>
+            <div class="grid md:grid-cols-3 gap-6 text-lg">
+                <div class="bg-white/20 p-6 rounded-lg backdrop-blur-sm">
+                    <span class="text-3xl block mb-2">✅</span>
+                    <h3 class="font-semibold text-xl mb-1">Early Error Detection</h3>
+                    <p class="text-sm">Catch bugs during development, not in production.</p>
+                </div>
+                <div class="bg-white/20 p-6 rounded-lg backdrop-blur-sm">
+                    <span class="text-3xl block mb-2">💡</span>
+                    <h3 class="font-semibold text-xl mb-1">Enhanced Readability</h3>
+                    <p class="text-sm">Clear types make code easier to understand and manage.</p>
+                </div>
+                <div class="bg-white/20 p-6 rounded-lg backdrop-blur-sm">
+                    <span class="text-3xl block mb-2">📈</span>
+                    <h3 class="font-semibold text-xl mb-1">Scalable Projects</h3>
+                    <p class="text-sm">Ideal for large applications and team collaboration.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 md:p-10">
+        <section id="building-blocks" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl mb-8 text-center">The Building Blocks</h2>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Core Data Types</h3>
+                    <p class="mb-4 text-sm">TypeScript enforces data types explicitly. Here are some common ones:</p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><span class="icon-placeholder">📝</span><strong>String:</strong>
+                            Textual data like <code>"Hello"</code> or <code>'World'</code>.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">🔢</span><strong>Number:</strong>
+                            Numeric data, e.g., <code>42</code>, <code>3.14</code>.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">🚦</span><strong>Boolean:</strong>
+                            Logical <code>true</code> or <code>false</code>.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">📦</span><strong>Array:</strong>
+                            Ordered list of values, e.g., <code>number[]</code>.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">🧩</span><strong>Tuple:</strong>
+                            Array with fixed types/length, e.g., <code>[string, number]</code>.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">❓</span><strong>Any:</strong>
+                            Opt-out of type checking (use sparingly!).</li>
+                        <li class="flex items-center"><span class="icon-placeholder">🤷</span><strong>Unknown:</strong>
+                            Safer alternative to `any`; requires type checks.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">💨</span><strong>Void:</strong>
+                            Represents absence of value (e.g., function with no return).</li>
+                        <li class="flex items-center"><span class="icon-placeholder">🚫</span><strong>Null &
+                                Undefined:</strong> Represent absence of value.</li>
+                        <li class="flex items-center"><span class="icon-placeholder">🛑</span><strong>Never:</strong>
+                            For values that never occur (e.g., function always throws).</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Variables: <code>var</code>, <code>let</code>, &
+                        <code>const</code></h3>
+                    <p class="mb-4 text-sm">How you declare variables matters for scope and mutability.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="p-2 text-left">Feature</th>
+                                    <th class="p-2 text-left code-like">var</th>
+                                    <th class="p-2 text-left code-like">let</th>
+                                    <th class="p-2 text-left code-like">const</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-2">Scope</td>
+                                    <td class="p-2">Function</td>
+                                    <td class="p-2">Block</td>
+                                    <td class="p-2">Block</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2">Hoisting</td>
+                                    <td class="p-2">Yes (value <code>undefined</code>)</td>
+                                    <td class="p-2">Yes (TDZ)</td>
+                                    <td class="p-2">Yes (TDZ)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2">Re-declaration</td>
+                                    <td class="p-2">Allowed</td>
+                                    <td class="p-2">No (in same scope)</td>
+                                    <td class="p-2">No</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2">Re-assignment</td>
+                                    <td class="p-2">Allowed</td>
+                                    <td class="p-2">Allowed</td>
+                                    <td class="p-2">No</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-xs highlight-bg p-2 rounded"><strong>Best Practice:</strong> Prefer <code
+                            class="code-like !text-black">const</code> by default, use <code
+                            class="code-like !text-black">let</code> if reassignment is needed. Avoid <code
+                            class="code-like !text-black">var</code>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="structuring-code" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl mb-8 text-center">Structuring Your Code</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Typed Functions</h3>
+                    <p class="text-sm mb-3">Define clear contracts for your functions.</p>
+                    <ul class="space-y-1 text-sm">
+                        <li>✅ Explicit parameter types</li>
+                        <li>✅ Explicit return types</li>
+                        <li>✅ Optional (<code>?</code>) & default parameters</li>
+                        <li>✅ Rest parameters (<code>...args</code>)</li>
+                        <li>✅ Function overloads</li>
+                    </ul>
+                    <p class="mt-3 text-xs code-like">function add(a: number, b: number): number { return a + b; }</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Interfaces: Object Shapes</h3>
+                    <p class="text-sm mb-3">Define the "shape" or contract an object must follow.</p>
+                    <div class="html-diagram">
+                        <div class="html-diagram-box text-sm">Interface Person {<br />name: string;<br />age?:
+                            number;<br />readonly id: number;<br />}</div>
+                        <p class="text-xs mt-2">Acts like a blueprint for objects.</p>
+                    </div>
+                    <p class="mt-3 text-sm">Supports optional (<code>?</code>) and readonly properties.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Classes & OOP</h3>
+                    <p class="text-sm mb-3">Leverage Object-Oriented Programming principles.</p>
+                    <ul class="space-y-1 text-sm">
+                        <li><span class="font-medium">Encapsulation:</span> Bundle data & methods (<code>public</code>,
+                            <code>private</code>, <code>protected</code>).</li>
+                        <li><span class="font-medium">Inheritance:</span> Create new classes from existing ones
+                            (<code>extends</code>).</li>
+                        <li><span class="font-medium">Polymorphism:</span> Objects treated as common type.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced-power" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl mb-8 text-center">Advanced Type Power</h2>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card lg:col-span-2">
+                    <h3 class="text-2xl font-semibold text-center mb-6">Key TypeScript Feature Areas (Conceptual)</h3>
+                    <div class="chart-container">
+                        <canvas id="featuresChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center mt-2">Illustrative chart showing conceptual grouping of TypeScript's
+                        powerful features.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Generics <code>&lt;T&gt;</code></h3>
+                    <p class="text-sm mb-3">Create reusable components that work with various types while maintaining
+                        type safety.</p>
+                    <div class="html-diagram">
+                        <div class="html-diagram-box text-sm">function identity&lt;T&gt;(arg: T): T { return arg; }
+                        </div>
+                        <p class="text-xs mt-1"><code>T</code> is a type placeholder.</p>
+                    </div>
+                    <p class="mt-2 text-sm">Example: A <code>Box&lt;T&gt;</code> can hold anything, but you know what's
+                        inside!</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Utility Types</h3>
+                    <p class="text-sm mb-3">Transform existing types into new ones.</p>
+                    <ul class="space-y-1 text-sm list-disc list-inside">
+                        <li><code>Partial&lt;T&gt;</code>: All properties optional.</li>
+                        <li><code>Readonly&lt;T&gt;</code>: All properties readonly.</li>
+                        <li><code>Pick&lt;T, K&gt;</code>: Select specific properties.</li>
+                        <li><code>Omit&lt;T, K&gt;</code>: Exclude specific properties.</li>
+                        <li><code>Record&lt;K, T&gt;</code>: Object with keys K, values T.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Union & Literal Types</h3>
+                    <p class="text-sm mb-3">Combine types or specify exact values.</p>
+                    <p class="code-like text-xs">type Result = "success" | "error" | "pending";</p>
+                    <p class="code-like text-xs mt-2">type StatusCode = 200 | 404 | 500;</p>
+                    <p class="mt-2 text-sm">Use with type guards (<code>typeof</code>, <code>in</code>) for safe access.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Conditional Types & <code>infer</code></h3>
+                    <p class="text-sm mb-3">Make type decisions based on conditions.</p>
+                    <p class="code-like text-xs">type IsString&lt;T&gt; = T extends string ? true : false;</p>
+                    <p class="mt-2 text-sm"><code>infer</code> helps extract types within conditional checks.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="in-practice" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl mb-8 text-center">TypeScript in Practice</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold"><code>tsconfig.json</code></h3>
+                    <p class="text-sm mb-3">The heart of your TypeScript project configuration.</p>
+                    <ul class="space-y-1 text-sm list-disc list-inside">
+                        <li><code>target</code>: JS version to compile to.</li>
+                        <li><code>module</code>: Module system (e.g., <code>commonjs</code>, <code>esnext</code>).</li>
+                        <li><code>strict</code>: Enables all strict type-checking (recommended!).</li>
+                        <li><code>outDir</code>: Output directory for JS files.</li>
+                        <li><code>rootDir</code>: Input directory of TS files.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Modules & Namespaces</h3>
+                    <p class="text-sm mb-3">Organize your codebase effectively.</p>
+                    <div class="html-diagram">
+                        <div class="html-diagram-box text-sm">fileA.ts<br /><code>export const foo = ...</code></div>
+                        <span class="html-diagram-arrow">➔</span>
+                        <div class="html-diagram-box text-sm">fileB.ts<br /><code>import { foo } from './fileA'</code>
+                        </div>
+                    </div>
+                    <p class="mt-2 text-sm"><strong>Modules (ES6):</strong> Preferred for file-based organization,
+                        explicit imports/exports.</p>
+                    <p class="mt-1 text-sm"><strong>Namespaces:</strong> Older way for logical grouping (less common
+                        now).</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold">Async Programming</h3>
+                    <p class="text-sm mb-3">Handle asynchronous operations with type safety.</p>
+                    <p class="code-like text-xs">async function fetchData(): Promise&lt;Data&gt; { ... }</p>
+                    <p class="mt-2 text-sm">Use <code>Promise&lt;T&gt;</code> to type promise resolutions.</p>
+                    <p class="mt-1 text-sm"><code>async/await</code> syntax for cleaner async code.</p>
+                    <p class="mt-1 text-sm">Remember <code>try/catch</code> for error handling!</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="best-practices" class="scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl mb-8 text-center">Key Best Practices</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card text-center highlight-bg">
+                    <span class="text-3xl block mb-2">🛡️</span>
+                    <h3 class="font-semibold text-lg">Enable <code>strict</code> Mode</h3>
+                    <p class="text-xs">Catch more errors early.</p>
+                </div>
+                <div class="card text-center highlight-bg">
+                    <span class="text-3xl block mb-2">🚫</span>
+                    <h3 class="font-semibold text-lg">Avoid <code>any</code></h3>
+                    <p class="text-xs">Use <code>unknown</code> or specific types.</p>
+                </div>
+                <div class="card text-center highlight-bg">
+                    <span class="text-3xl block mb-2">🧊</span>
+                    <h3 class="font-semibold text-lg">Use <code>readonly</code></h3>
+                    <p class="text-xs">For immutable properties.</p>
+                </div>
+                <div class="card text-center highlight-bg">
+                    <span class="text-3xl block mb-2">🎯</span>
+                    <h3 class="font-semibold text-lg">Explicit Return Types</h3>
+                    <p class="text-xs">Make function contracts clear.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-8 mt-12 border-t border-gray-200">
+        <p class="text-sm text-gray-600">Infographic based on "A Comprehensive Resource on TypeScript".</p>
+        <p class="text-xs text-gray-500">Happy Typing!</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const processLabel = (label) => {
+                if (typeof label === 'string' && label.length > 16) {
+                    const words = label.split(' ');
+                    const lines = [];
+                    let currentLine = '';
+                    for (const word of words) {
+                        if ((currentLine + word).length > 16 && currentLine.length > 0) {
+                            lines.push(currentLine.trim());
+                            currentLine = word + ' ';
+                        } else {
+                            currentLine += word + ' ';
+                        }
+                    }
+                    lines.push(currentLine.trim());
+                    return lines;
+                }
+                return label;
+            };
+
+            const featuresCtx = document.getElementById('featuresChart');
+            if (featuresCtx) {
+                const featureChartLabels = [
+                    'Static Typing & Type Safety',
+                    'Object-Oriented Features',
+                    'Advanced Type Manipulation',
+                    'Tooling & Ecosystem Integration',
+                    'Modern JavaScript Syntax Plus'
+                ].map(processLabel);
+
+                new Chart(featuresCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: featureChartLabels,
+                        datasets: [{
+                            label: 'Conceptual Importance / Usage',
+                            data: [90, 80, 75, 85, 95], // Example data
+                            backgroundColor: [
+                                '#FF6B6B80', // Coral Red with alpha
+                                '#4ECDC480', // Turquoise with alpha
+                                '#FFE66D80', // Pale Yellow with alpha
+                                '#FFB07C80', // Lighter Coral
+                                '#84DCC680'  // Lighter Turquoise
+                            ],
+                            borderColor: [
+                                '#FF6B6B',
+                                '#4ECDC4',
+                                '#FFE66D',
+                                '#FFB07C',
+                                '#84DCC6'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Conceptual Score' }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    title: function (tooltipItems) {
+                                        const item = tooltipItems[0];
+                                        let label = item.chart.data.labels[item.dataIndex];
+                                        if (Array.isArray(label)) {
+                                            return label.join(' ');
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('header, section');
+
+            function updateActiveLink() {
+                let index = sections.length;
+                while (--index && window.scrollY + 100 < sections[index].offsetTop) { }
+
+                navLinks.forEach((link) => link.classList.remove('active'));
+                if (index >= 0 && navLinks[index]) {
+                    // Check if sections[index] corresponds to a nav link
+                    const currentSectionId = sections[index].id;
+                    const activeLink = document.querySelector(`.nav-link[href="#${currentSectionId}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    } else if (navLinks[0] && sections[index].tagName.toLowerCase() === 'header') {
+                        // Special case for hero section if it's just <header>
+                        navLinks[0].classList.add('active');
+                    }
+                } else if (navLinks[0] && sections[0] && sections[0].tagName.toLowerCase() === 'header' && window.scrollY < sections[1].offsetTop - 100) {
+                    navLinks[0].classList.add('active'); // Ensure first link active if at top
+                }
+            }
+
+            if (document.getElementById('navbar')) {
+                window.addEventListener('scroll', updateActiveLink);
+                updateActiveLink(); // Initial call
+            }
+        });
+    </script>
+</body>
+
+</html>
